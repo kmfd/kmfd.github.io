@@ -508,6 +508,16 @@ function autoNext4(e) {
     start('4');
   }
 }
+document.getElementById("log").onclick = log1
+function log1(){
+	var newDiv = document.createElement('logbox');
+	newDiv.id = 'logbox';
+	newDiv.innerHTML = '<ul> <li>'+ window.current[0] + '</br>' + window.current[1] + '</br>' + window.current[2] + '</br>' + window.current[3] + '</li> </ul>' + '<ul> <li>' + 'url: http://kmfd.github.io/index.html?tv1=' + window.current[0] + '&tv2=' + window.current[1] + '&tv3=' + window.current[2] + '&tv4=' + window.current[3]
+
+	document.getElementById("area").appendChild(newDiv);
+	window.scrollTo(0,document.body.scrollHeight);
+};
+
 
 Mousetrap.bind(['4', 'l'], function() {
   next('1')
