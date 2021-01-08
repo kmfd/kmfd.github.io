@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nine TVs</title>
+  <link href="ninetvs.css" rel="stylesheet">
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+      <div class="navbar-header">
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <img id="logo" src="9circle.png"></img>
+          <h2>Nine TVs</h2>
+          <a class="navbar-brand" href="index.html">
+            <p>index</p>
+          </a>
+        </div>
+      </div>
+
+      <div id="controlbar">
+
+        <button id="filebutton" name="files[]">
+          <img id="buttonicon" src="add_doc_icon.png"></img>
+        </button>
+
+        <input type="file" id="files" name="files[]" multiple />
+        <output id="list"></output>
+
+        <div id="controls">
+          <div id="shuffle" class="aspect">
+            <p>shuff.</p>
+          </div>
+
+          <div id="aspect" class="aspect">
+            <p>next</p>
+            <div id="opt-select">
+              <div id="opt-box">
+                <div id="nextall" class="optall">all</div>
+                <div id="next-1" class="opt">1</div>
+                <div id="next-2" class="opt">2</div>
+                <div id="next-3" class="opt">3</div>
+                <div id="next-4" class="opt">4</div>
+              </div>
+            </div>
+          </div>
+
+          <div id="aspect" class="aspect">
+            <p>skip30</p>
+            <div id="opt-select">
+              <div id="opt-box">
+                <div id="skipall" class="optall">all</div>
+                <div id="skip-1" class="opt">1</div>
+                <div id="skip-2" class="opt">2</div>
+                <div id="skip-3" class="opt">3</div>
+                <div id="skip-4" class="opt">4</div>
+              </div>
+            </div>
+          </div>
+
+          <div id="aspect" class="aspect">
+            <p>stop</p>
+            <div id="opt-select">
+              <div id="opt-box">
+                <div id="stopall" class="optall">all</div>
+                <div id="stop-1" class="opt">1</div>
+                <div id="stop-2" class="opt">2</div>
+                <div id="stop-3" class="opt">3</div>
+                <div id="stop-4" class="opt">4</div>
+              </div>
+            </div>
+          </div>
+
+          <div id="aspect" class="aspect">
+            <p>start</p>
+            <div id="opt-select">
+              <div id="opt-box">
+                <div id="startall" class="optall">all</div>
+                <div id="start-1" class="opt">1</div>
+                <div id="start-2" class="opt">2</div>
+                <div id="start-3" class="opt">3</div>
+                <div id="start-4" class="opt">4</div>
+              </div>
+            </div>
+          </div>
+
+          <div id="aspect" class="aspect">
+            <p>loops</p>
+            <div id="opt-select">
+              <div id="opt-box">
+                <div id="loopnext" class="optall">next</div>
+                <div id="loopsame" class="optall">restart</div>
+                <div id="loopoff" class="optall">off</div>
+                <div id="looplist" class="optall">looplist</div>
+              </div>
+            </div>
+          </div>
+
+          <div id="log" class="aspect">
+            <p>log</p>
+          </div>
+
+          <div id="parse" class="aspect">
+            <p>parse</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /.container -->
+  </nav>
+
+  <!-- Page Content -->
+  <div class="container" id="area">
+    <article>
+      <section id="instructions">
+        <p>Instructions: grab a URL and drag it in to the drop zone below.</p>
+        <p>Try also dropping a few files from your desktop on the drop zone and notice the content-type: text/uri-list</p>
+        <div>
+          <input type="radio" name="getDataType" value="text" id="text" checked="checked" /> <label for="text">getData('Text')</label>
+        </div>
+        <div>
+          <input type="radio" name="getDataType" value="type" id="type" /> <label for="type">getData(e.dataTransfer.types[0]) based on detected content type</label>
+        </div>
+      </section>
+      <section id="drag">
+      </section>
+    </article>
+
+    <div id="one" class="row">
+      <div class="tv-row col-lg-4 text-center">
+        <div id="tv">
+          <video class="vid" id="video1" controls muted>
+          </video>
+        </div>
+        <section class="drop" id="drop1">
+          <li class="info">Drop here to set URL</li>
+        </section>
+      </div>
+
+      <div class="tv-row col-lg-4 text-center">
+        <div id="tv">
+          <video class="vid" id="video2" controls muted>
+          </video>
+        </div>
+        <section class="drop" id="drop2">
+          <li class="info">Drop here to set URL</li>
+        </section>
+      </div>
+
+      <div class="tv-row col-lg-4 text-center">
+        <div id="tv">
+          <video class="vid" id="video3" controls muted>
+          </video>
+        </div>
+        <section class="drop" id="drop3">
+          <li class="info">Drop here to set URL</li>
+        </section>
+      </div>
+
+      <div class="tv-row col-lg-4 text-center">
+        <div id="tv">
+          <video class="vid" id="video4" controls muted>
+          </video>
+        </div>
+        <section class="drop" id="drop4">
+          <li class="info">Drop here to set URL</li>
+        </section>
+      </div>
+
+    </div> <!-- /.row -->
+  </div> <!-- /.container -->
+
+  <!-- hls.js is HTTP Layer Streaming -
+	   - enables .m3u8 andother format streaming video -->
+  <script src="js/hls.js"></script>
+
+  <!-- Mousetrap for keyboard bindings -->
+  <script src="js/jquery.js"></script>
+  <script src="js/mousetrap.min.js"></script>
+
+  <script src="ninetvs.js"></script>
+
+</body>
+</html>
