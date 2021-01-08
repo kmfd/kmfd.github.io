@@ -1,0 +1,403 @@
+/* ninetvs.css */
+html {
+  margin: 0;
+  display: grid;
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  background-color: #000000;
+  overflow: hidden;
+  font-family: "Lucida Console", Monaco, monospace;
+  margin: 0;
+  height: 100%;
+  width: 100%;
+  display: flex;
+}
+
+h2 {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+#area {
+  height: 100%;
+  width: 100%;
+}
+
+.tv-row {
+  opacity: .9;
+  float: left;
+  height: 50%;
+  width: 50%;
+}
+
+/*.tv-row:hover #urlbox {
+    display: inherit;
+}*/
+#one {
+  margin: 0;
+  /*background: url("9circle.png") no-repeat center;*/
+  background-size: 45%;
+  height: 100%;
+  width: 100%;
+}
+
+#logbox {
+  bottom: -65px;
+  display: block;
+  left: 0;
+  position: relative;
+  z-index: 1000;
+}
+
+#logbox ul {
+  display: inline-block;
+  z-index: 1000;
+  display: block;
+  list-style: outside none none;
+  background: #333;
+  color: #ccc;
+  font-size: 30px;
+}
+
+#logbox ul li {
+  width: 500px;
+  margin-right: 35px;
+  width: auto;
+  font-size: 26px;
+}
+
+.col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-xs-2, .col-sm-2, .col-md-2, .col-lg-2, .col-xs-3, .col-sm-3, .col-md-3, .col-lg-3, .col-xs-4, .col-sm-4, .col-md-4, .col-lg-4, .col-xs-5, .col-sm-5, .col-md-5, .col-lg-5, .col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, .col-xs-7, .col-sm-7, .col-md-7, .col-lg-7, .col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, .col-xs-9, .col-sm-9, .col-md-9, .col-lg-9, .col-xs-10, .col-sm-10, .col-md-10, .col-lg-10, .col-xs-11, .col-sm-11, .col-md-11, .col-lg-11, .col-xs-12, .col-sm-12, .col-md-12, .col-lg-12 {
+  min-height: 1px;
+  padding: 0;
+  position: relative;
+}
+
+#tv {
+  margin: 0;
+  height: 97%;
+}
+
+.vid {
+  #min-height: 48vh;
+  #max-width: 87vh;
+  height: 100%;
+  width: 100%;
+}
+
+#logo {
+  margin-top: 20px;
+  height: auto;
+  width: 60px;
+}
+
+.navbar {
+  float: left;
+  height: 100%;
+  width: 60px;
+}
+
+.navbar h2 {
+  margin-top: 20px;
+}
+
+.navbar a {
+  width: 150px;
+  margin: 20 auto 0;
+}
+
+.navbar-inverse .navbar-brand {
+  color: yellow;
+  margin-top: 15px;
+}
+
+.collapse {
+  text-align: center;
+  width: 96%;
+}
+
+embed {
+  height: 99%;
+  width: -moz-available;
+}
+
+.container {
+  margin: 0;
+}
+
+#controlbar {
+  width: 60px;
+}
+
+button {
+  margin: 0 0 0 10px;
+  background-color: black;
+  border: none;
+}
+
+#buttonicon {
+  width: 40px;
+  margin: 2px -8px -2px -6px;
+}
+
+input, output {
+  display: none;
+}
+
+#controls {
+  display: contents;
+  color: orange;
+  font-size: 16px;
+}
+
+#controls a {
+  color: yellow;
+}
+
+.aspect {
+  z-index: 100;
+  background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
+  color: orange;
+  display: block;
+  border: 1px solid #000000;
+  height: 40px;
+}
+
+.aspect p {
+  vertical-align: middle;
+  line-height: 0px;
+}
+
+.aspect:hover {
+  color: white;
+  border: 1px solid orange;
+}
+
+.aspect:hover>#opt-select {
+  display: inline-block;
+}
+
+#opt-select {
+  background-color: grey;
+  display: none;
+  position: absolute;
+  left: 60px;
+  margin-top: -41px;
+  height: 132px;
+  width: 100px;
+  z-index: 10;
+  font-size: 20px;
+}
+
+#opt-box {
+  margin: 2px;
+  text-align: center;
+}
+
+.opt:hover, .optall:hover {
+  background-color: white;
+}
+
+.opt {
+  height: 46px;
+  width: 46px;
+  margin: 1px;
+  background-color: orange;
+  display: inline-block;
+  float: left;
+}
+
+.optall {
+  height: 30px;
+  width: 94px;
+  margin: 1px;
+  background-color: orange;
+  display: inline-block;
+  float: left;
+}
+
+article div {
+  margin: 10px 0;
+}
+
+label {
+  line-height: 32px;
+}
+
+/* for safari */
+*[draggable=true] {
+  -khtml-user-drag: element;
+  cursor: move;
+}
+
+.drop {
+  border: 3px dashed #999;
+  background: #333;
+  overflow-y: hidden;
+  height: 24px;
+}
+
+.drop .info {
+  color: #fff;
+  text-align: center;
+  font-size: 12px;
+}
+
+.drop ul {
+  margin: 0;
+  padding: 0;
+}
+
+.drop li {
+  border-top: 2px solid #999;
+  list-style: none;
+  color: #fff;
+  overflow: hidden;
+}
+
+.drop li:first-child {
+  border-top: 0;
+}
+
+#instructions {
+  display: none;
+}
+
+@media screen and (max-width: 1900px) {
+  h2 {
+    color: #ffffff;
+    font-weight: 700;
+  }
+
+  .navbar>.container .navbar-brand, .navbar>.container-fluid .navbar-brand {
+    margin-left: -10;
+  }
+
+  #logbox {
+    bottom: -65px;
+    display: block;
+    left: 0;
+    position: relative;
+    z-index: 1000;
+  }
+
+  #logbox ul {
+    display: inline-block;
+    z-index: 1000;
+    display: block;
+    list-style: outside none none;
+    background: #333;
+    color: #ccc;
+    font-size: 30px;
+  }
+
+  #logbox ul li {
+    width: 500px;
+    margin-right: 35px;
+    width: auto;
+    font-size: 26px;
+  }
+
+  input, output {
+    color: white;
+    font-size: medium;
+    float: left;
+  }
+
+  article div {
+    margin: 10px 0;
+  }
+
+  label {
+    line-height: 32px;
+  }
+
+  .drop {
+    border: 1px dashed #999;
+    min-height: 0;
+  }
+
+  .drop li {
+    border-top: 2px solid #999;
+    list-style: none;
+    font-size: 80%;
+    color: #fff;
+  }
+}
+
+@media screen and (max-width: 1040px) {
+  h2 {
+    color: #ffffff;
+    font-weight: 400;
+  }
+
+  .navbar h2 {
+    margin-left: -5px;
+    width: 124px;
+  }
+
+  .navbar>.container .navbar-brand, .navbar>.container-fluid .navbar-brand {
+    margin-left: -10;
+  }
+
+  #logbox {
+    bottom: -65px;
+    display: block;
+    left: 0;
+    position: relative;
+    z-index: 1000;
+  }
+
+  #logbox ul {
+    display: inline-block;
+    z-index: 1000;
+    display: block;
+    list-style: outside none none;
+    background: #333;
+    color: #ccc;
+    font-size: 30px;
+  }
+
+  #logbox ul li {
+    width: 500px;
+    margin-right: 35px;
+    width: auto;
+    font-size: 26px;
+  }
+
+  input, output {
+    color: white;
+    float: left;
+    font-size: 70%;
+  }
+
+  article div {
+    margin: 10px 0;
+  }
+
+  label {
+    line-height: 32px;
+  }
+
+  .drop {
+    border: 1px dashed #999;
+    min-height: 0;
+  }
+
+  .drop li {
+    border-top: 2px solid #999;
+    list-style: none;
+    font-size: 80%;
+    color: #fff;
+  }
+}
+
+/* Shift to Bottom Nav */
+@media (max-aspect-ratio: 16/9) {
+  body {
+    height: 100%;
+    width: 100%;
+  }
+}
