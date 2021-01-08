@@ -7,6 +7,24 @@ window.all = 0;
 window.looplist = 0;
 window.nexting = new Array(4).fill(null);
 
+function getUrlVars() {
+var vars = {};
+var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+vars[key] = value;
+});
+return vars;
+}
+
+if (getUrlVars()['tv1'] >= '') {
+  window.goodstuff[0] = getUrlVars()["tv1"];
+    window.goodstuff[1] = getUrlVars()["tv2"]
+      window.goodstuff[2] = getUrlVars()["tv3"]
+        window.goodstuff[3] = getUrlVars()["tv4"]
+  next(1)
+  next(2)
+  next(3)
+  next(4)
+};
 
 function nameVideo(arg) {
   var videoNum = 'video' + arguments[0];
