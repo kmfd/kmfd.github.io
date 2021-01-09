@@ -1,4 +1,4 @@
-window.goodstuff = [];
+window.urlList = [];
 window.end = '';
 window.current = new Array(4).fill(null);
 window.playing = new Array(4).fill(null);
@@ -8,18 +8,18 @@ window.looplist = 0;
 window.nexting = new Array(4).fill(null);
 
 function getUrlVars() {
-var vars = {};
-var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
-vars[key] = value;
-});
-return vars;
+  var vars = {};
+  var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m, key, value) {
+    vars[key] = value;
+  });
+  return vars;
 }
 
 if (getUrlVars()['tv1'] >= '') {
-  window.goodstuff[0] = getUrlVars()["tv1"];
-    window.goodstuff[1] = getUrlVars()["tv2"]
-      window.goodstuff[2] = getUrlVars()["tv3"]
-        window.goodstuff[3] = getUrlVars()["tv4"]
+  window.urlList[0] = getUrlVars()["tv1"];
+  window.urlList[1] = getUrlVars()["tv2"]
+  window.urlList[2] = getUrlVars()["tv3"]
+  window.urlList[3] = getUrlVars()["tv4"]
   next(1)
   next(2)
   next(3)
@@ -51,22 +51,6 @@ function htmlToElement(html) {
 var td = htmlToElement('<td>foo</td>'),
   div = htmlToElement('<div><span>nested</span> <span>stuff</span></div>');
 
-function addVideo(arg) {
-  var videoNum = nameVideo(arguments[0]);
-  let tvIndex = arguments[0] - 1;
-  var video = htmlToElement('<video class="vid" id="' + videoNum + '" controls muted></video>');
-  // video.setAttribute('id', videoNum);
-  // video.setAttribute(controls);
-  // video.setAttribute(muted);
-  // video.setAttribute('class', 'vid');
-  videoToRemove = document.getElementById(videoNum)
-  videoToRemove.parentNode.replaceChild(video, videoToRemove);
-  document.getElementById(videoNum).addEventListener('loadeddata', (event) => {
-    window.playing[tvIndex] = 1;
-    console.log('loadeddata ' + videoNum);
-  });
-}
-
 document.getElementById('video1').addEventListener('loadeddata', (event) => {
   window.playing[0] = 1;
   console.log('loadeddata 1');
@@ -87,23 +71,66 @@ document.getElementById('video4').addEventListener('loadeddata', (event) => {
   console.log('loadeddata 4');
 });
 
-function addYouTube(arg) {
+document.getElementById('video1').onload = function() {
+  window.playing[0] = 1;
+  console.log('loadeddata 1');
+};
+
+document.getElementById('video2').onload = function() {
+  window.playing[1] = 1;
+  console.log('loadeddata 2');
+};
+
+document.getElementById('video3').onload = function() {
+  window.playing[2] = 1;
+  console.log('loadeddata 3');
+};
+
+document.getElementById('video4').onload = function() {
+  window.playing[3] = 1;
+  console.log('loadeddata 4');
+};
+
+
+function addVideo(arg) {
+  var videoNum = nameVideo(arguments[0]);
+  let tvIndex = arguments[0] - 1;
+  var video = htmlToElement('<video class="vid" id="' + videoNum + '" controls muted></video>');
+  videoToRemove = document.getElementById(videoNum)
+  videoToRemove.parentNode.replaceChild(video, videoToRemove);
+  document.getElementById(videoNum).addEventListener('loadeddata', (event) => {
+    window.playing[tvIndex] = 1;
+    console.log('loadeddata ' + videoNum);
+  });
+}
+
+function addTwitch(arg) {
   var vidNum = nameVideo(arguments[0]);
-  var iframe = htmlToElement('<iframe id="' + vidNum + '" width="100%" height="100%" src="https://www.youtube.com/embed/YE7VzlLtp-4?autoplay=1&mute=1"></iframe>');
-  // var iframe = document.createElement('iframe');
-  // iframe.setAttribute('id', vidnum);
-  // iframe.setAttribute('allowfullscreen', '');
-  // iframe.setAttribute('width', '560');
-  // iframe.setAttribute('height', '315');
-  // iframe.setAttribute('src', '//www.youtube.com/embed/YE7VzlLtp-4');
+  var iframe = htmlToElement('<iframe id="' + vidNum + '" width="100%" height="100%" allowfullscreen="" src="https://player.twitch.tv/?autoplay=true&muted=true" parent=["kmfd.github.io"]></iframe>');
   videoToRemove = document.getElementById(vidNum);
   videoToRemove.parentNode.replaceChild(iframe, videoToRemove);
+}
+
+function addYouTube(arg) {
+  var vidNum = nameVideo(arguments[0]);
+  var iframe = htmlToElement('<iframe id="' + vidNum + '" width="100%" height="100%" allowfullscreen="" src="https://www.youtube.com/embed/YE7VzlLtp-4?autoplay=1&mute=1"></iframe>');
+  videoToRemove = document.getElementById(vidNum);
+  videoToRemove.parentNode.replaceChild(iframe, videoToRemove);
+}
+
+function isTwitch(item) {
+  let pattern = new RegExp("(https?)?(:\/\/)?(www.)?twitch\.(?:com|tv)\/(video\/|channel\/)?.*(?!&)");
+  if (pattern.test(item)) {
+    return true
+  } else {
+    return false
+  }
 }
 
 function isYT(item) {
   let pattern = new RegExp("(https?)?(:\/\/)?(www.)?(?:youtube\.com|youtu\.be)\/(?!(feed\/|channel\/|c\/)).*([A-Za-z0-9_-]){11}(&.*)?");
   if (pattern.test(item)) {
-    return true
+    return truea
   } else {
     return false
   }
@@ -112,31 +139,38 @@ function isYT(item) {
 function next(arg) {
   tvNum = arguments[0]
   tvIndex = tvNum - 1
-  if (window.goodstuff.length != 0) {
+  if (window.urlList.length != 0) {
     window.playing[tvIndex] = 0;
     if (skipcurrent()) {
-      let video = document.getElementById('video' + tvNum);
-      document.getElementById('drop' + tvNum).innerHTML = '<li>' + window.goodstuff[window.toLoad] + '</li>';
-      window.current.splice(eval('tvIndex'), 1, window.goodstuff[window.toLoad]);
-      if (isYT(window.goodstuff[window.toLoad])) {
+      let video = document.getElementById(nameVideo(tvNum));
+      document.getElementById('drop' + tvNum).innerHTML = '<li>' + window.urlList[window.toLoad] + '</li>';
+      window.current.splice(eval('tvIndex'), 1, window.urlList[window.toLoad]);
+      if (isYT(window.urlList[window.toLoad])) {
         addYouTube(tvNum);
         let video = document.getElementById('video' + tvNum);
-        video.src = window.goodstuff[window.toLoad] + '?autoplay=1&mute=1'
+        video.src = window.urlList[window.toLoad] + '?autoplay=1&mute=1'
         //TODO needs to convert all youtube video urls to the embed code before loading above
         console.log(video)
       } else {
+        if (isTwitch(window.urlList[window.toLoad])) {
+          addTwitch(tvNum);
+          let video = document.getElementById('video' + tvNum);
+          video.src = window.urlList[window.toLoad] + '?autoplay=true&muted=true'
+          console.log(video)
+      }else{
         addVideo(tvNum);
         let video = document.getElementById('video' + tvNum);
-      if ((/\.mp4$/).test(window.goodstuff[window.toLoad])) {
-        playmp4(tvNum);
-      } else //if ((/m3u|\.ts/).test(window.goodstuff[window.toLoad]))
-      {
-        console.log('next ' + tvNum + ': trying m3u/ts...')
-        loadhls(tvNum);
-        //  } else {
-        //    cantplay(tvNum);
-      };
-    }} else {
+        if ((/\.mp4$/).test(window.urlList[window.toLoad])) {
+          playmp4(tvNum);
+        } else //if ((/m3u|\.ts/).test(window.urlList[window.toLoad]))
+        {
+          console.log('next ' + tvNum + ': trying m3u/ts...')
+          loadhls(tvNum);
+          //  } else {
+          //    cantplay(tvNum);
+        };};
+      }
+    } else {
       console.log("nothing in the queue that isn't on the grid");
     }
     //}
@@ -144,37 +178,60 @@ function next(arg) {
       console.log(window.current);
     }
     iterate();
-    if (!isYT(window.current[tvIndex])) {
-      if ((window.nexting[tvIndex] == 0 || window.nexting[tvIndex] == undefined)) {
-        console.log('nexting is 0 or undefined, setting to 1');
-        window.nexting[tvIndex] = 1;
-
-        //TODO this timeout doesnt work right now so the videos will not autonext if they havent loaded
-        setTimeout(function() {
-          if (window.playing[tvIndex] == 0) {
-            console.log('timeout, next ' + tvNum + ". nexting is 1, next");
-            next(tvNum);
-          } else {
-            console.log("timeout " + tvNum + " passed")
-            window.nexting[tvIndex] = 0;
-            console.log('nexting is 1, setting to 0');
-          }
-        }, 8000, arg);
-      }
-    }
+    locationchecker(tvNum);
   };
 };
 
+function locationchecker(arg) {
+  tvNum = arguments[0]
+  tvIndex = tvNum - 1
+
+ // might get a solution to check for yt vids failing to load from the yt iframe api
+  //if (!isYT(window.current[tvIndex])) {
+    var video = document.getElementById(nameVideo(tvNum));
+    if ((window.nexting[tvIndex] == 0 || window.nexting[tvIndex] == undefined)) {
+      console.log('nexting is 0 or undefined, setting to 1');
+      window.nexting[tvIndex] = 1;
+
+    //  #TODO this timeout doesnt work right now so the videos will not autonext if they havent loaded
+      setTimeout(function(tvNum) {
+        if (!isplaying(tvNum)) {
+          console.log('timeout, next ' + tvNum + ". nexting is 1, next");
+          next(tvNum);
+        } else {
+          console.log("timeout " + tvNum + " passed")
+          window.nexting[tvIndex] = 0;
+          console.log('nexting is 1, setting to 0');
+        }
+      }, 8000, arg);
+    }
+  //}
+}
+
+
+function isplaying(tvNum) {
+  tvIndex = tvNum - 1
+  var video = document.getElementById(nameVideo(tvNum));
+if (isYT(window.current[tvIndex]) && video.contentWindow.location) {
+return true
+  } else {
+  if (window.playing[tvIndex] == 1) {
+return true
+} else {
+  return false
+}
+}
+}
 
 function loadhls(arg) {
   let video = document.getElementById('video' + arguments[0]);
   if (Hls.isSupported()) {
-    console.log('Loading HLS: ' + window.goodstuff[window.toLoad]);
+    console.log('Loading HLS: ' + window.urlList[window.toLoad]);
     var config = {
-      debug: true,
+      debug: false,
     };
     let hls = new Hls(config);
-    hls.loadSource(window.goodstuff[window.toLoad]);
+    hls.loadSource(window.urlList[window.toLoad]);
     hls.attachMedia(video);
     // hls.on(Hls.Events.MANIFEST_PARSED, function() {
     video.play();
@@ -184,7 +241,7 @@ function loadhls(arg) {
   // When the browser has built-in HLS support (check using `canPlayType`), we can provide an HLS manifest (i.e. .m3u8 URL) directly to the video element throught the `src` property.
   // This is using the built-in support of the plain video element, without using hls.js.
   else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-    video.src = window.goodstuff[window.toLoad];
+    video.src = window.urlList[window.toLoad];
     video.addEventListener('canplay', function() {
       video.play();
     });
@@ -206,8 +263,8 @@ function nextall() {
 
 
 function iterate() {
-  if (window.goodstuff.length != 0) {
-    if (window.toLoad <= window.goodstuff.length - 2) {
+  if (window.urlList.length != 0) {
+    if (window.toLoad <= window.urlList.length - 2) {
       window.toLoad++;
     } else {
       window.toLoad = 0;
@@ -217,8 +274,8 @@ function iterate() {
 
 function skipcurrent() {
   let i = 1;
-  while (window.current.includes(window.goodstuff[window.toLoad]) | window.goodstuff[window.toLoad] == 0) {
-    if (i <= window.goodstuff.length) {
+  while (window.current.includes(window.urlList[window.toLoad]) | window.urlList[window.toLoad] == 0) {
+    if (i <= window.urlList.length) {
       iterate();
       i++;
     } else {
@@ -231,7 +288,7 @@ function skipcurrent() {
 function playmp4(arg) {
   console.log('mp4 found...');
   let video = document.getElementById('video' + arguments[0]);
-  video.src = window.goodstuff[window.toLoad];
+  video.src = window.urlList[window.toLoad];
   console.log('next ' + arguments[0] + ': ' + video.src);
   video.type = 'video/mp4';
   video.play();
@@ -240,15 +297,15 @@ function playmp4(arg) {
 
 
 function cantplay(arg) {
-  if ((/\.mkv$/).test(window.goodstuff[window.toLoad])) {
+  if ((/\.mkv$/).test(window.urlList[window.toLoad])) {
     let video = document.getElementById('video' + arguments[0]);
-    video.src = window.goodstuff[window.toLoad];
+    video.src = window.urlList[window.toLoad];
     console.log('next ' + arguments[0] + ': mkv not supported on Firefox');
     video.type = 'video/x-matroska';
     video.play();
   } else {
-    console.log(window.goodstuff[window.toLoad] + ' was unplayable, next...');
-    window.goodstuff.splice(0, 0, '0')
+    console.log(window.urlList[window.toLoad] + ' was unplayable, next...');
+    window.urlList.splice(0, 0, '0')
   }
 };
 
@@ -372,7 +429,7 @@ document.getElementById("skip-4").onclick = function() {
 document.getElementById("skipall").onclick = skipall;
 
 document.getElementById("shuffle").onclick = function() {
-  shuffle(window.goodstuff);
+  shuffle(window.urlList);
 };
 
 document.getElementById("loopnext").onclick = function() {
@@ -393,17 +450,17 @@ document.getElementById("loopoff").onclick = function() {
 };
 
 
-document.getElementById("looplist").onclick = function() {
-  if (window.looplist == 0) {
-    window.looplist = 1;
-    console.log('loop list enabled');
-    console.log(window.looplist);
-  } else {
-    window.looplist = 0;
-    console.log('loop list disabled');
-    console.log(window.looplist);
-  }
-};
+// document.getElementById("looplist").onclick = function() {
+//   if (window.looplist == 0) {
+//     window.looplist = 1;
+//     console.log('loop list enabled');
+//     console.log(window.looplist);
+//   } else {
+//     window.looplist = 0;
+//     console.log('loop list disabled');
+//     console.log(window.looplist);
+//   }
+// };
 
 
 function handleFileSelect(evt) {
@@ -431,23 +488,23 @@ function handleFileSelect(evt) {
         });
         let urls = [];
 
-        combined = newitems.concat(window.goodstuff);
-        window.goodstuff = combined;
-        for (let i = 0; i < (window.goodstuff.length) - 1; i++) {
+        combined = newitems.concat(window.urlList);
+        window.urlList = combined;
+        for (let i = 0; i < (window.urlList.length) - 1; i++) {
           let re = new RegExp("file:///");
           // let regex = /^(?:(?:https?|ftp|rtmp|rtsp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!10(?:\.\d{1,3}){3})(?!127(?:\.\d{1,3}){3})(?!169\.254(?:\.\d{1,3}){2})(?!192\.168(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/[^\s]*)?$/i;
           let regex = /^(http|ftp|rtmp|rtsp)/i;
-          if (regex.test(window.goodstuff[i])) {
-            console.log(regex.test(window.goodstuff[i]));
-            urls[i] = window.goodstuff[i];
-          } else if (re.test(window.goodstuff[i])) {} else {
+          if (regex.test(window.urlList[i])) {
+            console.log(regex.test(window.urlList[i]));
+            urls[i] = window.urlList[i];
+          } else if (re.test(window.urlList[i])) {} else {
 
-            window.goodstuff[i] = 'file:///' + window.goodstuff[i];
+            window.urlList[i] = 'file:///' + window.urlList[i];
           }
 
         }
         console.log(urls.length + " urls: " + urls);
-        console.log(goodstuff.length + " goodstuff: " + window.goodstuff);;
+        console.log(urlList.length + " urlList: " + window.urlList);;
       };
     })(f);
 
@@ -509,13 +566,27 @@ function autoNext4(e) {
   }
 }
 document.getElementById("log").onclick = log1
-function log1(){
-	var newDiv = document.createElement('logbox');
-	newDiv.id = 'logbox';
-	newDiv.innerHTML = '<ul> <li>'+ window.current[0] + '</br>' + window.current[1] + '</br>' + window.current[2] + '</br>' + window.current[3] + '</li> </ul>' + '<ul> <li>' + 'url: http://kmfd.github.io/index.html?tv1=' + window.current[0] + '&tv2=' + window.current[1] + '&tv3=' + window.current[2] + '&tv4=' + window.current[3]
 
-	document.getElementById("area").appendChild(newDiv);
-	window.scrollTo(0,document.body.scrollHeight);
+function log1() {
+  var newDiv = document.createElement('logbox');
+  newDiv.id = 'logbox';
+  newDiv.innerHTML = '<ul> <li>' + window.current[0] + '</br>' + window.current[1] + '</br>' + window.current[2] + '</br>' + window.current[3] + '</li> </ul>' + '<ul> <li>' + 'url: http://kmfd.github.io/index.html?tv1=' + window.current[0] + '&tv2=' + window.current[1] + '&tv3=' + window.current[2] + '&tv4=' + window.current[3]
+
+  document.getElementById("area").appendChild(newDiv);
+  window.scrollTo(0, document.body.scrollHeight);
+
+  // Your CSS as text
+  var styles = `
+    body {
+        overflow-y: scroll;
+    }
+`
+
+  var styleSheet = document.createElement("style")
+  styleSheet.type = "text/css"
+  styleSheet.innerText = styles
+  document.head.appendChild(styleSheet)
+
 };
 
 
@@ -550,7 +621,7 @@ Mousetrap.bind(['+'], function() {
 });
 
 Mousetrap.bind(['-'], function() {
-  shuffle(window.goodstuff)
+  shuffle(window.urlList)
 });
 
 Mousetrap.bind(['*'], function() {
