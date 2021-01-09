@@ -8,7 +8,8 @@ html {
 
 body {
   background-color: #000000;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: hidden;
   font-family: "Lucida Console", Monaco, monospace;
   margin: 0;
   height: 100%;
@@ -183,15 +184,16 @@ input, output {
   background-color: grey;
   display: none;
   position: absolute;
-  left: 60px;
   margin-top: -41px;
-  height: 132px;
+  left: 60px;
+  padding: 1px 0 2px 0;
   width: 100px;
   z-index: 10;
   font-size: 20px;
 }
 
 #opt-box {
+  padding: unset;
   margin: 2px;
   text-align: center;
 }
