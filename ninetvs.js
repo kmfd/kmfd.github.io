@@ -106,7 +106,7 @@ function addVideo(arg) {
 
 function addTwitch(arg) {
   var vidNum = nameVideo(arguments[0]);
-  var iframe = htmlToElement('<iframe id="' + vidNum + '" width="100%" height="100%" allowfullscreen="true" src="https://player.twitch.tv/?autoplay=true&muted=true"></iframe>');
+  var iframe = htmlToElement('<iframe id="' + vidNum + '" width="100%" height="100%" allowfullscreen="true" src="https://player.twitch.tv/?autoplay=true&muted=true&parent=kmfd.github.io&parent=www.kmfd.github.io"></iframe>');
   videoToRemove = document.getElementById(vidNum);
   videoToRemove.parentNode.replaceChild(iframe, videoToRemove);
 }
@@ -148,7 +148,7 @@ function next(arg) {
       if (isYT(window.urlList[window.toLoad])) {
         addYouTube(tvNum);
         let video = document.getElementById('video' + tvNum);
-        video.src = window.urlList[window.toLoad] + '?autoplay=1&mute=1'
+        video.src = window.urlList[window.toLoad] + '?autoplay=1&mute=1&parent=kmfd.github.io&parent=www.kmfd.github.io'
         //TODO needs to convert all youtube video urls to the embed code before loading above
         console.log(video)
       } else {
