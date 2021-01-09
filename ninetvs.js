@@ -106,7 +106,7 @@ function addVideo(arg) {
 
 function addTwitch(arg) {
   var vidNum = nameVideo(arguments[0]);
-  var iframe = htmlToElement('<iframe id="' + vidNum + '" width="100%" height="100%" allowfullscreen="true" src="https://player.twitch.tv/?autoplay=true&muted=true" parent=["kmfd.github.io"]></iframe>');
+  var iframe = htmlToElement('<iframe id="' + vidNum + '" width="100%" height="100%" allowfullscreen="true" src="https://player.twitch.tv/?autoplay=true&muted=true"></iframe>');
   videoToRemove = document.getElementById(vidNum);
   videoToRemove.parentNode.replaceChild(iframe, videoToRemove);
 }
