@@ -130,7 +130,7 @@ function isTwitch(item) {
 function isYT(item) {
   let pattern = new RegExp("(https?)?(:\/\/)?(www.)?(?:youtube\.com|youtu\.be)\/(?!(feed\/|channel\/|c\/)).*([A-Za-z0-9_-]){11}(&.*)?");
   if (pattern.test(item)) {
-    return truea
+    return true
   } else {
     return false
   }
