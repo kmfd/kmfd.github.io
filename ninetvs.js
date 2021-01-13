@@ -4,7 +4,6 @@ window.current = new Array(4).fill(null);
 window.playing = new Array(4).fill(null);
 window.toLoad = 0;
 window.all = 0;
-window.looplist = 0;
 window.nexting = new Array(4).fill(null);
 var initial = new Array(4).fill(null);;
 
@@ -82,26 +81,6 @@ document.getElementById('video4').addEventListener('loadeddata', (event) => {
   console.log('loadeddata 4');
 });
 
-// document.getElementById('video1').onload = function() {
-//   window.playing[0] = 1;
-//   console.log('loadeddata 1');
-// };
-//
-// document.getElementById('video2').onload = function() {
-//   window.playing[1] = 1;
-//   console.log('loadeddata 2');
-// };
-//
-// document.getElementById('video3').onload = function() {
-//   window.playing[2] = 1;
-//   console.log('loadeddata 3');
-// };
-//
-// document.getElementById('video4').onload = function() {
-//   window.playing[3] = 1;
-//   console.log('loadeddata 4');
-// };
-
 function autoNext(arg) {
   if (window.end.match('next')) {
     console.log('autonext ' + arguments[0]);
@@ -127,7 +106,6 @@ function addVideo(arg) {
   video.addEventListener('ended', (event) => {
     autoNext(arguments[0])
   });
-  //('ended', autoNext(arguments[0]), false);
 }
 
 function addTwitch(arg) {
@@ -149,8 +127,10 @@ function loaded(tvNum, vidtype) {
   if (vidtype == 'youTube') {
 
   } else if (vidtype == 'twitch') {}
-  // its hls
-  else {}
+
+  else {
+    // its hls
+  }
 }
 
 
@@ -517,19 +497,6 @@ function ytFormat(item) {
   };
 
 
-  // document.getElementById("looplist").onclick = function() {
-  //   if (window.looplist == 0) {
-  //     window.looplist = 1;
-  //     console.log('loop list enabled');
-  //     console.log(window.looplist);
-  //   } else {
-  //     window.looplist = 0;
-  //     console.log('loop list disabled');
-  //     console.log(window.looplist);
-  //   }
-  // };
-
-
   function handleFileSelect(evt) {
     let files = evt.target.files; // FileList object
 
@@ -590,7 +557,7 @@ function ytFormat(item) {
     var newDiv = document.createElement('logbox');
     newDiv.id = 'logbox';
     gridUrl = 'http://kmfd.github.io/index.html?tv1=' + window.current[0] + '&tv2=' + window.current[1] + '&tv3=' + window.current[2] + '&tv4=' + window.current[3]
-    newDiv.innerHTML = '<ul> <li>' + window.current[0] + '</br>' + window.current[1] + '</br>' + window.current[2] + '</br>' + window.current[3] + '</li> </ul>' + '<ul> <li>' + 'url to recall the current grid:</br><a href=' + gridUrl + '">' + gridUrl + '</a>'
+    newDiv.innerHTML = '<ul> <li>' + window.current[0] + '</br>' + window.current[1] + '</br>' + window.current[2] + '</br>' + window.current[3] + '</li> </ul>' + '<ul> <li>' + 'url to recall the current grid:</br><a href="' + gridUrl + '">' + gridUrl + '</a>'
 
     document.getElementById("area").appendChild(newDiv);
     window.scrollTo(0, document.body.scrollHeight);
