@@ -176,7 +176,7 @@ function ytFormat(item) {
   if (isYT(item)) {
     let pattern = new RegExp("(https?)?(:\/\/)?(www.)?(?:youtube\.com|youtu\.be)\/(?!(feed\/|channel\/|c\/)).*([A-Za-z0-9_-]){11}(&.*)?");
     ytID = item.match(/(?<=\=|\/)([A-Za-z0-9_-]){11}(?![a-zA-Z])/)[0]
-    return 'http://www.youtube.com/embed/' + ytID
+    return 'https://www.youtube.com/embed/' + ytID
   } else {
     return item
   }
