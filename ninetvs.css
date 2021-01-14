@@ -22,6 +22,18 @@ h2 {
   font-weight: 700;
 }
 
+
+
+a#github {
+  position: absolute;
+  bottom: 150px;
+  color: #eee
+}
+
+a#github:visited {
+  color: #ddd 
+}
+
 #area {
   height: 100%;
   width: 100%;

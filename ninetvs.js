@@ -229,7 +229,7 @@ function ytFormat(item) {
         } else {
           window.nexting[tvIndex] = 0
         };
-      }, 2000);
+      }, 8000);
   }
 
   function isPlaying(arg) {
