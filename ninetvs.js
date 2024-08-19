@@ -17,29 +17,43 @@ function getUrlVars() {
 
 if (getUrlVars()['tv1'] >= '') {
   window.urlList[0] = getUrlVars()["tv1"];
-  window.urlList[1] = getUrlVars()["tv2"]
-  window.urlList[2] = getUrlVars()["tv3"]
-  window.urlList[3] = getUrlVars()["tv4"]
+  console.log('URL exists in param slot 1:', window.urlList[0]); // log the URL in slot 1
   next(1)
-  if (window.urlList[1] != null) {
-    next(2)
-  }
-  if (window.urlList[2] != null) {
-    next(3)
-  }
-  if (window.urlList[3] != null) {
-    next(4)
-  }
-};
+  window.toLoad++;
+  console.log('URL playlist after adding that (nexting): ', window.urlList); // log url playlist state
+
+if (getUrlVars()['tv2'] >= '' && getUrlVars()['tv2']) {
+  window.urlList[1] = getUrlVars()["tv2"];
+  console.log('URL exists in param slot 2:', window.urlList[1]); // log the URL in slot 2
+  next(2)
+  window.toLoad++;
+  console.log('URL playlist after adding that (nexting): ', window.urlList); // log url playlist state
+}
+
+if (getUrlVars()['tv3'] >= '' && getUrlVars()['tv3']) {
+  window.urlList[2] = getUrlVars()["tv3"];
+  console.log('URL exists in param slot 3:', window.urlList[2]); // log the URL in slot 3
+  next(3)
+  window.toLoad++;
+}
+
+if (getUrlVars()['tv4'] >= '' && getUrlVars()['tv4']) {
+  window.urlList[3] = getUrlVars()["tv4"];
+  console.log('URL exists in param slot 4:', window.urlList[3]); // log the URL in slot 4
+  next(4)
+  window.toLoad++;
+}
+}
+		
 
 function nameVideo(arg) {
-  var videoNum = 'video' + arguments[0];
-  return videoNum;
+  var videoId = 'video' + arguments[0];
+  return videoId;
 }
 
 function removeVideo(arg) {
-  var videoNum = nameVideo(arguments[0]);
-  videoToRemove = document.getElementById(videoNum)
+  var videoId = nameVideo(arguments[0]);
+  videoToRemove = document.getElementById(videoId)
   videoToRemove.parentNode.removeChild(videoToRemove);
 }
 
@@ -92,35 +106,39 @@ function autoNext(arg) {
 }
 
 function addVideo(arg) {
-  var videoNum = nameVideo(arguments[0]);
+  var videoId = nameVideo(arguments[0]);
   let tvIndex = arguments[0] - 1;
-  var video = htmlToElement('<video class="vid" id="' + videoNum + '" controls muted></video>');
-  videoToRemove = document.getElementById(videoNum)
+  var video = htmlToElement('<video class="vid" id="' + videoId + '" controls muted></video>');
+  videoToRemove = document.getElementById(videoId)
   videoToRemove.parentNode.replaceChild(video, videoToRemove);
-  video = document.getElementById(videoNum)
+  video = document.getElementById(videoId)
   video.addEventListener('loadeddata', (event) => {
     window.playing[tvIndex] = 1;
     window.nexting[tvIndex] = 0;
-    console.log('loadeddata ' + videoNum);
+    console.log('loadeddata ' + videoId);
   });
   video.addEventListener('ended', (event) => {
     autoNext(arguments[0])
   });
+  console.log('addVideo completed, ready for HLS or mp4');
 }
 
 function addTwitch(arg) {
-  var vidNum = nameVideo(arguments[0]);
-  var iframe = htmlToElement('<iframe id="' + vidNum + '" width="100%" height="100%" allowfullscreen="" src="https://player.twitch.tv/?autoplay=true&muted=true" parent=["kmfd.github.io"]></iframe>');
-  videoToRemove = document.getElementById(vidNum);
+  var videoId = nameVideo(arguments[0]);
+  var iframe = htmlToElement('<iframe id="' + videoId + '" width="100%" height="100%" allowfullscreen="" src="https://player.twitch.tv/?autoplay=true&muted=true" parent=["kmfd.github.io"]></iframe>');
+  videoToRemove = document.getElementById(videoId);
   videoToRemove.parentNode.replaceChild(iframe, videoToRemove);
 }
 
 function addYouTube(arg) {
-  var vidNum = nameVideo(arguments[0]);
-  var iframe = htmlToElement('<iframe id="' + vidNum + '" width="100%" height="100%" allowfullscreen="" src="https://www.youtube.com/embed/YE7VzlLtp-4?autoplay=1&mute=1"></iframe>');
+  var videoId = nameVideo(arguments[0]);
+  // var iframe = htmlToElement('<iframe id="' + videoId + '" width="100%" height="100%" allowfullscreen="" src="https://www.youtube.com/embed/YE7VzlLtp-4?autoplay=1&mute=1"></iframe>');
+  var iframe = htmlToElement('<iframe id="' + videoId + '" width="100%" height="100%" allowfullscreen="" src=""></iframe>');
   //iframe.onload = loaded(1);
-  videoToRemove = document.getElementById(vidNum);
+  videoToRemove = document.getElementById(videoId);
   videoToRemove.parentNode.replaceChild(iframe, videoToRemove);
+  
+  // console.log(`Default video 'Big Buck Bunny' loaded with src: https://www.youtube.com/embed/YE7VzlLtp-4`);
 }
 
 function loaded(tvNum, vidtype) {
@@ -161,63 +179,63 @@ function ytFormat(item) {
     return item
   }
 }
-  function next(arg) {
-    tvNum = arguments[0]
-    tvIndex = tvNum - 1
-    clearTimeout(initial[tvIndex])
-    // if theres urls on the list to load
-    if (window.urlList.length != 0) {
-      //reset the playing flag
-      window.playing[tvIndex] = 0;
-      //if the one we're trying to load is already on the grid,
-      if (skipcurrent()) {
-        let video = document.getElementById(nameVideo(tvNum));
-        document.getElementById('drop' + tvNum).innerHTML = '<li>' + ytFormat(window.urlList[window.toLoad]) + '</li>';
-        window.current.splice(eval('tvIndex'), 1, window.urlList[window.toLoad]);
-        //if the url to load is YouTube
-        if (isYT(window.urlList[window.toLoad])) {
-          addYouTube(tvNum);
-          let video = document.getElementById('video' + tvNum);
-          video.src = ytFormat(window.urlList[window.toLoad]) + '?autoplay=1&mute=1'
-          //TODO needs to convert all youtube video urls to the embed code before loading above
-          console.log(video)
-        } else {
-          //if url to load is Twitch
-          if (isTwitch(window.urlList[window.toLoad])) {
-            addTwitch(tvNum);
-            let video = document.getElementById('video' + tvNum);
-            video.src = window.urlList[window.toLoad] + '?autoplay=true&muted=true'
-            console.log(video)
-          } else {
-            // if the url to load is not YT or Twitch, its probably mp4, HLS or TLS, or nothing (try anyway)
-            addVideo(tvNum);
-            let video = document.getElementById('video' + tvNum);
-            if ((/\.mp4$/).test(window.urlList[window.toLoad])) {
-              playmp4(tvNum);
-            } else //if ((/m3u|\.ts/).test(window.urlList[window.toLoad]))
-            {
-              console.log('next ' + tvNum + ': trying m3u/ts...')
-              loadhls(tvNum);
-              //  } else {
-              //    cantplay(tvNum);
-            };
-          };
-        }
-      } else {
-        console.log("nothing in the queue that isn't on the grid");
-      }
-      //}
-      if (window.all == 0) {
-        console.log(window.current);
-      }
-      iterate();
-      if ((window.nexting[tvIndex] == 0) || (window.nexting[tvIndex] == null)) {
-        window.nexting[tvIndex] = 1;
-        console.log('nexting to 1');
-              };
-              timeout(tvNum);
-    };
-  };
+
+
+function next(tvNum) {
+  const tvIndex = tvNum - 1;
+  const current = window.current;
+  console.log("playlist index entry to load: " + window.toLoad);
+
+  if (window.urlList.length === 0) {
+    console.log("nothing in the queue that isn't on the grid");
+    return;
+  }
+
+  clearTimeout(initial[tvIndex]);
+
+  if (skipcurrent()) {
+    let video = document.getElementById(nameVideo(tvNum));
+    let newUrl = window.urlList[window.toLoad];
+
+	if (isYT(window.urlList[window.toLoad])) {
+		addYouTube(tvNum);
+		console.log("tv element id to update src of: " + document.getElementById(nameVideo(tvNum)));
+		toloadURL = ytFormat(newUrl) + '?autoplay=1&mute=1';
+		console.log("toload url: " + toloadURL);
+		video = document.getElementById(nameVideo(tvNum));
+		video.src = ytFormat(newUrl) + '?autoplay=1&mute=1';
+	} else if (isTwitch(window.urlList[window.toLoad])) {
+		addTwitch(tvNum);
+		video.src = newUrl + '?autoplay=true&muted=true';
+	} else {
+	console.log("next should try to addVideo as we hit neither YT nor Twitch detection");
+	addVideo(tvNum);
+	console.log("testing newUrl for mp4 in string. string to check: '" + newUrl + "'");
+	if ((/\.mp4$/).test(newUrl)) {
+		console.log('mp4 detected, loading mp4 directly')
+		playmp4(tvNum);
+	} else {
+		loadhls(tvNum);
+	}
+	}
+    
+    window.current.splice(tvIndex, 1, newUrl);
+    document.getElementById('drop' + tvNum).innerHTML = '<li>' + ytFormat(newUrl) + '</li>';
+  }
+
+  
+  console.log("report of grid urls after nexting:");
+  logVideoUrls();
+  iterate();
+
+  if (window.nexting[tvIndex] === 0 || window.nexting[tvIndex] === null) {
+    window.nexting[tvIndex] = 1;
+    console.log('nexting to 1');
+  }
+
+  timeout(tvNum);
+}
+
 
   function timeout(tvNum) {
     tvIndex = tvNum - 1
@@ -229,7 +247,7 @@ function ytFormat(item) {
         } else {
           window.nexting[tvIndex] = 0
         };
-      }, 8000);
+      }, 3600);
   }
 
   function isPlaying(arg) {
@@ -317,18 +335,34 @@ function ytFormat(item) {
     }
   }
 
-  function skipcurrent() {
-    let i = 1;
-    while (window.current.includes(window.urlList[window.toLoad]) | window.urlList[window.toLoad] == 0) {
-      if (i <= window.urlList.length) {
-        iterate();
-        i++;
-      } else {
-        return false;
-      }
+
+function skipcurrent() {
+  let i = 1;
+  console.log('currently playing urls to check for skipping:')
+  console.log('0: ' + window.current[0]);
+  console.log('1: ' + window.current[1]);
+  console.log('2: ' + window.current[2]);
+  console.log('3: ' + window.current[3]);
+  console.log('URL playlist: ')
+  console.log(JSON.stringify(window.urlList))
+  while (i <= window.urlList.length) {
+    console.log('playlist index window.toLoad is: ' + window.toLoad);
+    console.log('new url to check for skipping: ' + window.urlList[window.toLoad]);	  
+    if (window.current.includes(window.urlList[window.toLoad]) || window.urlList[window.toLoad] === undefined) {
+	  console.log('window.urlList[window.toLoad] is either undefined or already in the current playing grid')
+      iterate();
+      console.log('Iterated. New URL to be loaded next: ' + window.urlList[window.toLoad]);
+    } else {
+      console.log('URL to be loaded next is not the same as the current URLs and is not 0, returning true.');
+      return true;
     }
-    return true;
+    i++;
   }
+  console.log('No URLs to be loaded that are not already playing, returning false.');
+  return false;
+}
+
+
 
   function playmp4(arg) {
     console.log('mp4 found...');
@@ -357,6 +391,89 @@ function ytFormat(item) {
   };
 
 
+  function cancel(e) {
+    if (e.preventDefault) e.preventDefault(); // required by FF + Safari
+    e.dataTransfer.dropEffect = 'copy'; // tells the browser what drop effect is allowed here
+    return false; // required by IE
+  }
+
+  function entities(s) {
+    var e = {
+      '"' : '"',
+      '&' : '&',
+      '<' : '<',
+      '>' : '>'
+    };
+    return s.replace(/["&<>]/g, function (m) {
+      return e[m];
+    });
+  }
+
+
+var getDataType = document.querySelector('#text');
+
+function dropSetup(arg){
+  var tvNum = arguments[0]
+  var tvIndex = tvNum - 1
+  var drop = document.querySelector('#drop' + tvNum);
+  console.log(drop)
+  // Tells the browser that we *can* drop on this target
+  addEvent(drop, 'dragover', cancel);
+  addEvent(drop, 'dragenter', cancel);
+
+  addEvent(drop, 'drop', function (e) {
+  if (e.preventDefault) e.preventDefault(); // stops the browser from redirecting off to the text.
+  // just rendering the text in to the list
+  // clear out the original text
+  drop.innerHTML = '<ul></ul>';
+  var li = document.createElement('li');
+  /** THIS IS THE MAGIC: we read from getData based on the content type - so it grabs the item matching that format **/
+ 
+  // console.log('custom logging : ' + getDataType.checked);
+  // console.log(e.dataTransfer.types);
+  // console.log(e.dataTransfer.getData(type));
+  // console.log('Text : ' + e.dataTransfer.getData('Text'));
+  
+
+  if (getDataType.checked == false && e.dataTransfer.types) {
+	li.innerHTML = '<ul>';
+	[].forEach.call(e.dataTransfer.types, function (type) {
+	  li.innerHTML += '<li>' + entities(e.dataTransfer.getData(type) + ' (content-type: ' + type + ')') + '</li>';
+	});
+	li.innerHTML += '</ul>';
+  } else {
+	// ... however, if we're IE, we don't have the .types property, so we'll just get the Text value
+	 li.innerHTML = e.dataTransfer.getData('Text');
+	//  var file = e.dataTransfer.files[0];
+        //  var path = e.dataTransfer.files[0].path;
+	//  console.log('path: ' + path)
+  }
+  var ul = drop.querySelector('ul');
+  if (ul.firstChild) {
+	ul.insertBefore(li, ul.firstChild);
+  } else {
+	ul.appendChild(li);
+  }
+  var addURL;
+
+  // if   (path == true){
+  // var addURL = path;
+  // } else {
+    var addURL = e.dataTransfer.getData('Text');
+  // }
+
+  console.log('addurl: ' + addURL);
+  window.urlList.push(addURL); // add the URL to the array
+  window.toLoad = window.urlList.length -1
+  next(tvNum)
+  return false;
+});
+};
+
+dropSetup(1);
+dropSetup(2);
+dropSetup(3);
+dropSetup(4);
 
   function start(arg) {
     let video = document.getElementById('video' + arguments[0]);
@@ -510,7 +627,13 @@ function ytFormat(item) {
         return function(e) {
           let vlc = document.getElementById("vlc");
           let playlistUL = reader.result;
-          let plarray = playlistUL.split(/\r\n/);
+          console.log(playlistUL);
+
+		  // we need to parse the m3u file by looking at line endings, which are either \r\n as on windows or just \n as on linux.
+          let eol = (playlistUL.slice(-2) === '\r\n') ? '\r\n' : '\n';
+          let plarray = playlistUL.split(eol);
+
+          console.log(plarray);
           let exts = [/ext/i]
           let filteredArr = plarray.filter(function(val) {
             return !(val === "");
@@ -521,7 +644,6 @@ function ytFormat(item) {
             });
           });
           let urls = [];
-
           combined = newitems.concat(window.urlList);
           window.urlList = combined;
           for (let i = 0; i < (window.urlList.length) - 1; i++) {
@@ -529,16 +651,18 @@ function ytFormat(item) {
             // let regex = /^(?:(?:https?|ftp|rtmp|rtsp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!10(?:\.\d{1,3}){3})(?!127(?:\.\d{1,3}){3})(?!169\.254(?:\.\d{1,3}){2})(?!192\.168(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/[^\s]*)?$/i;
             let regex = /^(http|ftp|rtmp|rtsp)/i;
             if (regex.test(window.urlList[i])) {
-              console.log(regex.test(window.urlList[i]));
+              console.log("found regex for http: " + regex.test(window.urlList[i]));
               urls[i] = window.urlList[i];
             } else if (re.test(window.urlList[i])) {} else {
-
+			  console.log("found no regex for http, assuming file path and will prepend 'file:///': " + regex.test(window.urlList[i]));
               window.urlList[i] = 'file:///' + window.urlList[i];
             }
 
           }
-          console.log(urls.length + " urls: " + urls);
-          console.log(urlList.length + " urlList: " + window.urlList);;
+          console.log(urls.length + " urls added from filelist:");
+		  console.log(JSON.stringify(urls))
+          console.log(urlList.length + " urls on the updated urlList playlist:");
+		  console.log(JSON.stringify(window.urlList))
         };
       })(f);
 
@@ -546,6 +670,8 @@ function ytFormat(item) {
       // Can perhaps instead use object URLs see https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications#Using_object_URLs
       reader.readAsText(f);
     }
+	
+	window.toLoad = 0; // reset the playlist index for url to load next, the urls from the file were added to the beginning of the list
   }
 
   document.getElementById('files').addEventListener('change', handleFileSelect, false);
@@ -576,6 +702,13 @@ function ytFormat(item) {
 
   };
 
+function logVideoUrls() {
+  console.log('Current video URLs:');
+  console.log(window.current[0]);
+  console.log(window.current[1]);
+  console.log(window.current[2]);
+  console.log(window.current[3]);
+}
 
   Mousetrap.bind(['4', 'l'], function() {
     next('1')
