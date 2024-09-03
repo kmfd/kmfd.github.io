@@ -420,48 +420,11 @@ function dropSetup(arg){
   // Tells the browser that we *can* drop on this target
   addEvent(drop, 'dragover', cancel);
   addEvent(drop, 'dragenter', cancel);
-
   addEvent(drop, 'drop', function (e) {
   if (e.preventDefault) e.preventDefault(); // stops the browser from redirecting off to the text.
-  // just rendering the text in to the list
-  // clear out the original text
-  drop.innerHTML = '<ul></ul>';
-  var li = document.createElement('li');
   /** THIS IS THE MAGIC: we read from getData based on the content type - so it grabs the item matching that format **/
- 
-  // console.log('custom logging : ' + getDataType.checked);
-  // console.log(e.dataTransfer.types);
-  // console.log(e.dataTransfer.getData(type));
-  // console.log('Text : ' + e.dataTransfer.getData('Text'));
-  
-
-  if (getDataType.checked == false && e.dataTransfer.types) {
-	li.innerHTML = '<ul>';
-	[].forEach.call(e.dataTransfer.types, function (type) {
-	  li.innerHTML += '<li>' + entities(e.dataTransfer.getData(type) + ' (content-type: ' + type + ')') + '</li>';
-	});
-	li.innerHTML += '</ul>';
-  } else {
-	// ... however, if we're IE, we don't have the .types property, so we'll just get the Text value
-	 li.innerHTML = e.dataTransfer.getData('Text');
-	//  var file = e.dataTransfer.files[0];
-        //  var path = e.dataTransfer.files[0].path;
-	//  console.log('path: ' + path)
-  }
-  var ul = drop.querySelector('ul');
-  if (ul.firstChild) {
-	ul.insertBefore(li, ul.firstChild);
-  } else {
-	ul.appendChild(li);
-  }
   var addURL;
-
-  // if   (path == true){
-  // var addURL = path;
-  // } else {
-    var addURL = e.dataTransfer.getData('Text');
-  // }
-
+  var addURL = e.dataTransfer.getData('Text');
   console.log('addurl: ' + addURL);
   window.urlList.push(addURL); // add the URL to the array
   window.toLoad = window.urlList.length -1
@@ -648,7 +611,6 @@ dropSetup(4);
           window.urlList = combined;
           for (let i = 0; i < (window.urlList.length) - 1; i++) {
             let re = new RegExp("file:///");
-            // let regex = /^(?:(?:https?|ftp|rtmp|rtsp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!10(?:\.\d{1,3}){3})(?!127(?:\.\d{1,3}){3})(?!169\.254(?:\.\d{1,3}){2})(?!192\.168(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/[^\s]*)?$/i;
             let regex = /^(http|ftp|rtmp|rtsp)/i;
             if (regex.test(window.urlList[i])) {
               console.log("found regex for http: " + regex.test(window.urlList[i]));
