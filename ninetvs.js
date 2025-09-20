@@ -123,12 +123,66 @@ function addVideo(arg) {
   console.log('addVideo completed, ready for HLS or mp4');
 }
 
-function addTwitch(arg) {
-  var videoId = nameVideo(arguments[0]);
-  var iframe = htmlToElement('<iframe id="' + videoId + '" width="100%" height="100%" allowfullscreen="" src="https://player.twitch.tv/?autoplay=true&muted=true" parent=["kmfd.github.io"]></iframe>');
+function addTwitch(tvNum, newUrl) {
+  var videoId = nameVideo(tvNum);
+  var script = document.createElement('script');
+  script.src = 'https://player.twitch.tv/js/embed/v1.js';
+  document.body.appendChild(script);
+
+  var div = htmlToElement('<div id="' + videoId + '" style="height: 100%;"></div>');
   videoToRemove = document.getElementById(videoId);
-  videoToRemove.parentNode.replaceChild(iframe, videoToRemove);
+  videoToRemove.parentNode.replaceChild(div, videoToRemove);
+
+  script.onload = function() {
+    var urlParts = newUrl.split('/');
+    var channelOrVideoId = urlParts[urlParts.length - 1];
+    
+    console.log('Preparing domain for parent option...');
+    var referrer = document.referrer;
+    console.log('Referrer:', referrer);
+    var originalDomain;
+    try {
+    	originalDomain = new URL(referrer).hostname;
+        console.log('Original domain from referrer:', originalDomain);
+    } catch (error) {
+        console.error('Error getting original domain from referrer:', error);
+        originalDomain = document.location.origin.replace('https://', '').replace('http://', '');
+        console.log('Falling back to current origin:', originalDomain);
+    }
+
+    var options = {
+      width: '100%',
+      autoplay: true,
+      muted: true,
+      parent: [originalDomain]
+    };
+
+    console.log('Parent option:', options.parent);
+
+    if (urlParts.includes('videos')) {
+      options.video = channelOrVideoId;
+      options.height = '100%';
+    } else {
+      options.channel = channelOrVideoId;
+      options.height = 300; // or any other default height you want
+    }
+
+    var player = new Twitch.Player(videoId, options);
+
+    player.addEventListener(Twitch.Player.PLAYING, () => {
+      let tvIndex = tvNum - 1;
+      window.playing[tvIndex] = 1;
+      window.nexting[tvIndex] = 0;
+      console.log('playing ' + videoId);
+    });
+
+    player.addEventListener(Twitch.Player.ENDED, () => {
+      autoNext(tvNum);
+    });
+  };
 }
+
+
 
 function addYouTube(arg) {
   var videoId = nameVideo(arguments[0]);
@@ -205,8 +259,7 @@ function next(tvNum) {
 		video = document.getElementById(nameVideo(tvNum));
 		video.src = ytFormat(newUrl) + '?autoplay=1&mute=1';
 	} else if (isTwitch(window.urlList[window.toLoad])) {
-		addTwitch(tvNum);
-		video.src = newUrl + '?autoplay=true&muted=true';
+		addTwitch(tvNum, newUrl);
 	} else {
 	console.log("next should try to addVideo as we hit neither YT nor Twitch detection");
 	addVideo(tvNum);
@@ -709,3 +762,4 @@ function logVideoUrls() {
   Mousetrap.bind(['*'], function() {
     document.getElementById("loopnext").click()
   });
+
