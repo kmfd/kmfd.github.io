@@ -152,6 +152,7 @@ function addTwitch(tvNum, newUrl) {
 
     var options = {
       width: '100%',
+      height: '100%',
       autoplay: true,
       muted: true,
       parent: [originalDomain]
@@ -762,4 +763,5 @@ function logVideoUrls() {
   Mousetrap.bind(['*'], function() {
     document.getElementById("loopnext").click()
   });
+
 
