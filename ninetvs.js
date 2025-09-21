@@ -165,7 +165,7 @@ function addTwitch(tvNum, newUrl) {
       options.height = '100%';
     } else {
       options.channel = channelOrVideoId;
-      options.height = 300; // or any other default height you want
+      // options.height = 300;
     }
 
     var player = new Twitch.Player(videoId, options);
@@ -763,5 +763,6 @@ function logVideoUrls() {
   Mousetrap.bind(['*'], function() {
     document.getElementById("loopnext").click()
   });
+
 
 
